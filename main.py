@@ -18,14 +18,14 @@ def generate_midgame_position(min_pieces=8, max_pieces=20):
 def generate_varied_invalid():
     cases = []
 
-    # Caso 1: Pieza en casilla clara
+    # Pieza en casilla clara
     def case_piece_on_light():
         b = Board.generate_random_valid()
         i, j = random.choice([(i, j) for i in range(8) for j in range(8) if (i + j) % 2 == 0])
         b.board[i][j] = random.choice(['n', 'b'])
         return b if not b.validate() else None
 
-    # Caso 2: Más de 12 piezas negras
+    #  Más de 12 piezas negras
     def case_more_than_12_black():
         b = Board.generate_random_valid()
         blacks = 0
@@ -40,19 +40,19 @@ def generate_varied_invalid():
                 break
         return b if not b.validate() else None
 
-    # Caso 3: Peón en primera fila
+    # Peón en primera fila
     def case_pawn_first_row():
         b = Board.generate_random_valid()
         b.board[0][random.choice([j for j in range(8) if (0 + j) % 2 == 1])] = 'b'
         return b if not b.validate() else None
 
-    # Caso 4: Muy pocas piezas
+    #  Muy pocas piezas
     def case_few_pieces():
         b = Board()
         b.board[1][1] = 'n'
         return b if not b.validate() else None
 
-    # Caso 5: Demasiadas damas negras
+    # Demasiadas damas negras
     def case_many_black_kings():
         b = Board.generate_random_valid()
         black_kings = 0
@@ -63,12 +63,12 @@ def generate_varied_invalid():
                     black_kings += 1
         return b if not b.validate() else None
 
-    # Caso 6: Ninguna pieza (vacío)
+    #  Ninguna pieza (vacío)
     def case_empty_board():
         b = Board()
         return b if not b.validate() else None
 
-    # Caso 7: Muchas piezas de ambos tipos pero menos de 12 por bando
+    #  Muchas piezas de ambos tipos pero menos de 12 por bando
     def case_many_pieces_balanced():
         b = Board()
         count = 0
@@ -79,24 +79,23 @@ def generate_varied_invalid():
                     count += 1
         return b if not b.validate() else None
 
-    # Caso 8: Doble pieza en casilla (simulación de corrupción, en la práctica sólo sobrescribe)
+    #  Doble pieza en casilla (simulación de corrupción)
     def case_double_piece():
         b = Board()
         b.board[1][1] = 'n'
-        b.board[1][1] = 'b'  # No se pueden poner dos piezas, pero puedes forzar una inconsistencia de otro tipo si quieres.
+        b.board[1][1] = 'b' 
         return b if not b.validate() else None
 
-    # Lista de todas las funciones
     cases = [case_piece_on_light, case_more_than_12_black, case_pawn_first_row, case_few_pieces,
              case_many_black_kings, case_empty_board, case_many_pieces_balanced, case_double_piece]
 
-    # Intenta hasta encontrar un caso realmente inválido (algunas validaciones pueden pasar)
+    # Intenta hasta encontrar un caso  inválido 
     for _ in range(10):
         f = random.choice(cases)
         b = f()
         if b is not None:
             return b
-    # Como fallback, siempre regresa al menos un tablero inválido generado con pieza en casilla clara
+
     return case_piece_on_light()
 
 

@@ -6,7 +6,7 @@ def board_to_features(board):
     mapping = {'.': 0.0, '-': 0.0, 'n': 1.0, 'N': 1.5, 'b': -1.0, 'B': -1.5}
     features = [mapping[board.board[i][j]] for i in range(8) for j in range(8)]
     
-    # Nuevo: features booleanos
+    # Features booleanos
     has_piece_on_light = 0
     for i in range(8):
         for j in range(8):
