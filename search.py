@@ -23,7 +23,8 @@ def mlp_choice(board, player, mlp_model):
     if not moves:
         return None
     def score(b):
-        return mlp_model.predict(board_to_features(b))[0]
+        result = mlp_model.predict(board_to_features(b))
+        return result[0] if isinstance(result, tuple) else result
     return max(moves, key=score) if player == 'black' else min(moves, key=score)
 
 # aplica busqueda local hill climbing para mejorar una configuracion de tablero

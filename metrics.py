@@ -9,16 +9,15 @@ def reset_counters():
     mcts_nodes = 0
 
 # funcion para evaluar la precision del modelo MLP en una tarea de clasificacion compara la prediccion del modelo contra el valor real usando una tolerancia de error
-def evaluate_accuracy(model, X, Y, tolerance=0.5):
+def evaluate_classifier_accuracy(model, X, Y):
     correct = 0
     total = len(X)
     for i in range(total):
-        # obtener prediccion del modelo
-        pred, _ = model.predict(X[i])
-        if abs(pred - Y[i]) <= tolerance:
+        _, pred_class = model.predict_classifier(X[i])
+        if pred_class == Y[i]:
             correct += 1
-    # retornar proporcion de predicciones correctas
     return correct / total if total > 0 else 0.0
+
 
 # funcion que calcula el error cuadratico medio mide que tan lejos esta la prediccion del valor real en promedio
 def mean_squared_error(model, X, Y):

@@ -4,12 +4,34 @@ import math
 # convertir cada casilla del tablero en valor numerico segun pieza
 def board_to_features(board):
     mapping = {'.': 0.0, '-': 0.0, 'n': 1.0, 'N': 1.5, 'b': -1.0, 'B': -1.5}
-    return [mapping[board.board[i][j]] for i in range(8) for j in range(8)]
+    features = [mapping[board.board[i][j]] for i in range(8) for j in range(8)]
+    
+    # Nuevo: features booleanos
+    has_piece_on_light = 0
+    for i in range(8):
+        for j in range(8):
+            if (i + j) % 2 == 0 and board.board[i][j] in ['n', 'N', 'b', 'B']:
+                has_piece_on_light = 1
+    # Más de 12 piezas por bando
+    black = sum(board.board[i][j] in ['n', 'N'] for i in range(8) for j in range(8))
+    white = sum(board.board[i][j] in ['b', 'B'] for i in range(8) for j in range(8))
+    more_than_12_black = 1 if black > 12 else 0
+    more_than_12_white = 1 if white > 12 else 0
+    # Peón en fila 0 o 7
+    pawn_on_first_or_last = 0
+    for j in range(8):
+        if board.board[0][j] in ['n', 'b'] or board.board[7][j] in ['n', 'b']:
+            pawn_on_first_or_last = 1
+    # Menos de 2 piezas totales
+    few_pieces = 1 if (black + white) < 2 else 0
+    
+    features += [has_piece_on_light, more_than_12_black, more_than_12_white, pawn_on_first_or_last, few_pieces]
+    return features
 
 # clase MLP 
 class MLP:
     # constructor de la red neuronal
-    def __init__(self, input_size=64, hidden_sizes=[128, 64]):
+    def __init__(self, input_size=69, hidden_sizes=[128, 64]):
         # semilla para reproducibilidad
         random.seed(0)
         # definir tamanos de cada capa incluyendo salida
